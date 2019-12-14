@@ -8,13 +8,8 @@ Nano Scaffolding for a building a Go Service
 ## Dependencies
 
 Install the following
-
-1. gRPC
-
-        go get -u google.golang.org/grpc
-        go get -u github.com/golang/protobuf/protoc-gen-go
         
-2. proto buff compiler: protoc
+1. protobuf compiler: protoc
 
         mkdir tmp
         cd tmp
@@ -26,17 +21,17 @@ Install the following
         make check
         sudo make install
         
-3. gateway: gRPC-Gateway
+2. gRPC-Gateway
 
         go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
         go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
         go get -u github.com/golang/protobuf/protoc-gen-go
         
-4. for auto gen of stub: goimpl
+3. For gen of stub: goimpl
 
         go get -u github.com/akmsg/goimpl/cmd/goimpl
         
-5.  configuration: viper
+4.  configuration: viper
 
         go get -u github.com/spf13/viper
         
