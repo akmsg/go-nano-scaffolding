@@ -54,7 +54,7 @@ Install the following
             -H 'Accept: */*' \
             -d '{ "value": "Hello there!"}'
             
-4. Update your service definition by changing `definition/service.proto`:
+4. Update your service definition by changing `definition/service.proto`
 
 5. Regenerate stub and bindings for handler logic by running:
 
