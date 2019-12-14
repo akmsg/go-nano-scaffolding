@@ -3,6 +3,14 @@
 cwd=$(pwd)
 dir="$cwd"
 
+# installing dep
+dep=$(which dep)
+ if [[ -f "${dep}" ]]; then
+    echo "dep found at ${dep}"
+ else
+    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+    dep ensure
+ fi
 # source pkg to compile
 mainPkg="${dir}/cmd/"
 
