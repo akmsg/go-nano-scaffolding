@@ -1,0 +1,61 @@
+package server
+
+import (
+	"net/http"
+	"path"
+	"strings"
+
+	"path/filepath"
+
+	"{{ .BaseImportPath }}/logger"
+)
+
+var (
+	swaggerDir = getCwd() + "/definition/"
+)
+
+func getCwd() string {
+	p, _ := filepath.Abs("./")
+	return p
+}
+
+func serveSwagger(w http.ResponseWriter, r *http.Request) {
+	if !strings.HasSuffix(r.URL.Path, ".swagger.json") {
+		logger.Error(logTag, "Not Found: %s", r.URL.Path)
+		http.NotFound(w, r)
+		return
+	}
+
+	p := strings.TrimPrefix(r.URL.Path, "/swagger/")
+	p = path.Join(swaggerDir, p)
+	logger.Info(logTag, "path: %s", p)
+	http.ServeFile(w, r, p)
+}
+
+// allowCORS allows Cross Origin Resource Sharing from any origin.
+func allowCORS(w http.ResponseWriter, r *http.Request) {
+	if origin := r.Header.Get("Origin"); origin != "" {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+		if r.Method == "OPTIONS" && r.Header.Get("Access-Control-Request-Method") != "" {
+			preflightHandler(w, r)
+			return
+		}
+	}
+}
+
+func preflightHandler(w http.ResponseWriter, r *http.Request) {
+	headers := []string{"Content-Type", "Accept"}
+	w.Header().Set("Access-Control-Allow-Headers", strings.Join(headers, ","))
+	methods := []string{"GET", "HEAD", "POST", "PUT", "DELETE"}
+	w.Header().Set("Access-Control-Allow-Methods", strings.Join(methods, ","))
+	logger.Info(logTag, "preflight request for %s", r.URL.Path)
+	return
+}
+
+func handlerWrapper(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		allowCORS(w, r)
+		metrics.Increment(metrics.HandlerKey)
+		h.ServeHTTP(w, r)
+	})
+}

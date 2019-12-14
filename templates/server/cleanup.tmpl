@@ -1,0 +1,11 @@
+package server
+
+import (
+	"{{ .BaseImportPath }}/logger"
+)
+
+func Cleanup() {
+	logger.Info(logTag, "[Cleanup] releasing resources for graceful service shutdown")
+	// mysqldao.Destroy()
+	logger.Info(logTag, "[Cleanup] cleanup completed")
+}

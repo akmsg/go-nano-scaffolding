@@ -17,3 +17,5 @@ go build -o "${exec}" "${mainPkg}" || (echo "compilation failed :(" && exit 1)
 
 cd "${cwd}" || exit 2
 "${exec}" "${@}"
+
+# todo: move to new service dir and run go generate

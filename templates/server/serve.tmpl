@@ -1,0 +1,77 @@
+package server
+
+import (
+	_ "expvar"
+	"net"
+
+	"net/http"
+
+	"{{ .BaseImportPath }}/definition"
+	"{{ .BaseImportPath }}/logger"
+	"{{ .BaseImportPath }}/server/config"
+	"{{ .BaseImportPath }}/server/handler"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+)
+
+//TODO: Use viper
+const (
+	gRPCPort          = ":50052"
+	gRPCEndpoint      = "localhost:50052"
+	httpServerAddress = ":8181"
+)
+
+func serveGRPC() {
+	lis, err := net.Listen("tcp", gRPCPort)
+	if err != nil {
+		logger.Fatal(logTag, "[serveGRPC] failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	definition.Register{{ .ExportableServiceName }}Server(s, handler.New{{ .ExportableServiceName }}())
+
+	reflection.Register(s)
+
+	logger.Info(logTag, "[serveGRPC] gRPC will start on: %v", gRPCPort)
+	if err := s.Serve(lis); nil != err {
+		logger.Fatal(logTag, "[serveGRPC] failed to serve: %v", err)
+	}
+}
+
+func newGateway(ctx context.Context) (http.Handler, error) {
+	mux := runtime.NewServeMux()
+	opts := []grpc.DialOption{grpc.WithInsecure()}
+
+	err := definition.Register{{ .ExportableServiceName }}HandlerFromEndpoint(ctx, mux, gRPCEndpoint, opts)
+	if nil != err {
+		return nil, err
+	}
+	return mux, nil
+}
+
+func serveHTTP() error {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/swagger/", serveSwagger)
+
+	gw, err := newGateway(ctx)
+	if err != nil {
+		return err
+	}
+	mux.Handle("/", gw)
+
+	logger.Info(logTag, "[serveHTTP] http will start on: %v", httpServerAddress)
+	return http.ListenAndServe(httpServerAddress, handlerWrapper(mux))
+}
+
+// Serve ...
+func Serve() {
+	config.Load()
+
+	go serveGRPC()
+	serveHTTP()
+}
