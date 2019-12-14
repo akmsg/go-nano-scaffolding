@@ -26,5 +26,4 @@ jobs:
 
     - name: Build
       run: |
-        go build -v -o bin/nanokit.bin cmd/main.go 
-        ./nanokit.sh -name=testservice 
+        go build -v -o bin/nanokit.bin cmd/main.go
