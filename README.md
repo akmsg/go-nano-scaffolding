@@ -33,7 +33,7 @@ Install the following
         
 4. for auto gen of stub: goimpl
 
-        go get -u github.com/anandmishra01/goimpl/cmd/goimpl
+        go get -u github.com/akmsg/goimpl/cmd/goimpl
         
 5.  configuration: viper
 
