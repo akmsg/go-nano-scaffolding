@@ -28,5 +28,5 @@ jobs:
       run: go build -v -o bin/nanokit.bin cmd/main.go 
       
     - name: Execute binary
-      run: bin/nanokit.bin -h
+      run: bin/nanokit.bin -create=exampleservice
       
