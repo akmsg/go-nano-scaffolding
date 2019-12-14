@@ -1,5 +1,8 @@
+
 # go-nano-scaffolding
 Nano Scaffolding for a building a Go Service
+
+[![Build Status](https://travis-ci.org/akmsg/go-nano-scaffolding.svg?branch=master)](https://travis-ci.org/akmsg/go-nano-scaffolding)
 
 ### Dependencies
 
