@@ -29,6 +29,5 @@ jobs:
       
     - name: Execute binary
       run: |
-        curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-        bin/nanokit.bin -name=exampleservice
+        dep -h
       
