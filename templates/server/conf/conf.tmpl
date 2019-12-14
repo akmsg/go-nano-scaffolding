@@ -11,9 +11,21 @@ const (
 	logTag = "{{ .ServiceName }}.server.config"
 
 	configFileNameWithoutExt = "app_conf"
-	configFilePath           = "../../"
+	//todo: load from env
+	configFilePath           = "./"
 )
 
+// DBConfig ...
+type DBConfig struct {
+	Type     string `json:"type"`
+	Host     string `json:"host"`
+	Name     string `json:"name"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	Port     string `json:"port"`
+}
+
+// AppConfig ...
 type AppConfig struct {
 	Env     string        `json:"env"`
 	Name    string        `json:"name"`
