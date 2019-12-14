@@ -55,7 +55,6 @@ func preflightHandler(w http.ResponseWriter, r *http.Request) {
 func handlerWrapper(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		allowCORS(w, r)
-		metrics.Increment(metrics.HandlerKey)
 		h.ServeHTTP(w, r)
 	})
 }

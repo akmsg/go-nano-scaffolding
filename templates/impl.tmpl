@@ -24,7 +24,7 @@ func main() {
 		&goimpl.GenOpts{
 			Inter:    reflect.TypeOf((*definition.{{ .ExportableServiceName }}Server)(nil)).Elem(),
 			PkgName:  "handler",
-			ImplName: "*hoggerServer",
+			ImplName: "*{{ .ServiceName }}Server",
 
 			NoNamedReturnValues: true,
 			NoGoImports:         false,

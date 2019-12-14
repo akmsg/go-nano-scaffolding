@@ -6,6 +6,25 @@ import (
 	"text/template"
 )
 
+func createServerConf(servicePath string, templateData map[string]string) error {
+	t, errParse := template.ParseFiles("templates/server/conf/conf.tmpl")
+	if nil != errParse {
+		return errParse
+	}
+
+	wr, errCreate := os.Create(filepath.Join(servicePath, "server/conf/conf.go"))
+	if nil != errCreate {
+		return errCreate
+	}
+	defer wr.Close()
+
+	errExecuteMain := t.Execute(wr, templateData)
+	if nil != errExecuteMain {
+		return errExecuteMain
+	}
+	return nil
+}
+
 func createServerHandler(servicePath string, templateData map[string]string) error {
 	t, errParse := template.ParseFiles("templates/server/handlers/echo.tmpl")
 	if nil != errParse {
@@ -25,13 +44,13 @@ func createServerHandler(servicePath string, templateData map[string]string) err
 	return nil
 }
 
-func createServerConf(servicePath string, templateData map[string]string) error {
-	t, errParse := template.ParseFiles("templates/server/conf/conf.tmpl")
+func createServerHandlerServiceImpl(servicePath string, templateData map[string]string) error {
+	t, errParse := template.ParseFiles("templates/server/handlers/service_impl.tmpl")
 	if nil != errParse {
 		return errParse
 	}
 
-	wr, errCreate := os.Create(filepath.Join(servicePath, "server/conf/conf.go"))
+	wr, errCreate := os.Create(filepath.Join(servicePath, "server/handler/service_impl.go"))
 	if nil != errCreate {
 		return errCreate
 	}
@@ -121,14 +140,19 @@ func createServerServeUtils(servicePath string, templateData map[string]string) 
 }
 
 func createServer(servicePath string, templateData map[string]string) error {
+	errCreateServerConf := createServerConf(servicePath, templateData)
+	if nil != errCreateServerConf {
+		return errCreateServerConf
+	}
+
 	errCreateServerHandler := createServerHandler(servicePath, templateData)
 	if nil != errCreateServerHandler {
 		return errCreateServerHandler
 	}
 
-	errCreateServerConf := createServerConf(servicePath, templateData)
-	if nil != errCreateServerConf {
-		return errCreateServerConf
+	errCreateServerHandlerServiceImpl := createServerHandlerServiceImpl(servicePath, templateData)
+	if nil != errCreateServerHandlerServiceImpl {
+		return errCreateServerHandlerServiceImpl
 	}
 
 	errCreateServerDoc := createServerDoc(servicePath, templateData)

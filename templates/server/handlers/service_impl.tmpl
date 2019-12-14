@@ -1,0 +1,8 @@
+package handler
+
+import "{{ .BaseImportPath }}/definition"
+
+// New{{ .ExportableServiceName }} ...
+func New{{ .ExportableServiceName }}() definition.{{ .ExportableServiceName }}Server {
+	return &{{ .ServiceName }}Server{}
+}

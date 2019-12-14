@@ -70,7 +70,7 @@ func serveHTTP() error {
 
 // Serve ...
 func Serve() {
-	config.Load()
+	config.Read()
 
 	go serveGRPC()
 	serveHTTP()
