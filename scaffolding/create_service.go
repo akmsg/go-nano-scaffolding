@@ -66,6 +66,12 @@ func generateBoilerPlate(serviceName, outputDir string) error {
 		return fmt.Errorf("failed to createServiceGenerator: %v", errCreateServiceGenerator)
 	}
 
+	// 8. dep Gopkg.toml
+	errCreateDepGopkg := createDepGopkg(serviceName, td)
+	if nil != errCreateDepGopkg {
+		return fmt.Errorf("failed to createDepGopkg: %v", errCreateDepGopkg)
+	}
+
 	return nil
 }
 
