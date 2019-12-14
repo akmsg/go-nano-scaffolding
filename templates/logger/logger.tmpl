@@ -1,0 +1,59 @@
+package logger
+
+import (
+	"fmt"
+	"log"
+)
+
+const (
+	debug = "DEBUG"
+	info  = "INFO"
+	warn  = "WARN"
+	fatal = "FATAL"
+	error = "ERROR"
+
+	format = "[%s] %s:%s"
+)
+
+func Debug(tag, message string, args ...interface{}) {
+	if nil == args || len(args) < 1 {
+		log.Printf(fmt.Sprintf(format, debug, tag, message))
+		return
+	}
+	log.Printf(fmt.Sprintf(fmt.Sprintf(format, debug, tag, message), args))
+}
+
+func Info(tag, message string, args ...interface{}) {
+	if nil == args || len(args) < 1 {
+		log.Printf(fmt.Sprintf(format, info, tag, message))
+		return
+	}
+	log.Printf(fmt.Sprintf(fmt.Sprintf(format, info, tag, message), args))
+
+}
+
+func Warn(tag, message string, args ...interface{}) {
+	if nil == args || len(args) < 1 {
+		log.Printf(fmt.Sprintf(format, warn, tag, message))
+		return
+	}
+	log.Printf(fmt.Sprintf(fmt.Sprintf(format, warn, tag, message), args))
+}
+
+func Fatal(tag, message string, args ...interface{}) {
+	var fMessage string
+	if nil == args || len(args) < 1 {
+		fMessage = fmt.Sprintf(format, fatal, tag, message)
+	} else {
+		fMessage = fmt.Sprintf(fmt.Sprintf(format, fatal, tag, message), args)
+	}
+	log.Fatal(fMessage)
+}
+
+func Error(tag, message string, args ...interface{}) {
+	if nil == args || len(args) < 1 {
+		log.Printf(fmt.Sprintf(format, error, tag, message))
+		return
+	}
+	log.Printf(fmt.Sprintf(fmt.Sprintf(format, error, tag, message), args))
+}

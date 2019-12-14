@@ -1,0 +1,29 @@
+package main
+
+import (
+	"os"
+	"os/signal"
+	"syscall"
+
+	"{{ .BaseImportPath }}/server"
+	"{{ .BaseImportPath }}//logger"
+)
+
+const (
+	logTag = "{{ .ServiceName }}.cmd"
+)
+
+func main() {
+	logger.Info(logTag, "[main] starting the server")
+
+	// setup to handle the interrupt
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		server.Cleanup()
+		os.Exit(1)
+	}()
+
+	server.Serve()
+}

@@ -1,0 +1,11 @@
+package handler
+
+import (
+	"context"
+
+	"{{ .BaseImportPath }}/definition"
+)
+
+func echo(ctx context.Context, e *definition.EchoMessage) (*definition.EchoMessage, error) {
+	return e, nil
+}

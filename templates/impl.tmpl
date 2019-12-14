@@ -1,0 +1,39 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"reflect"
+	"log"
+
+	"github.com/akmsg/goimpl"
+	"{{ .BaseImportPath }}/definition"
+)
+
+func die(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func main() {
+	f, err := os.Create( "{{ .ServicePath }}/server/handler/xa_service.go")
+	die(err)
+	defer f.Close()
+	errGen := goimpl.Generate(
+		&goimpl.GenOpts{
+			Inter:    reflect.TypeOf((*definition.{{ .ServiceName }}Server)(nil)).Elem(),
+			PkgName:  "handler",
+			ImplName: "*hoggerServer",
+
+			NoNamedReturnValues: true,
+			NoGoImports:         false,
+			Extra:               []string{},
+		},
+		f)
+	if errGen != nil {
+		fmt.Fprintln(os.Stderr, errGen)
+		os.Exit(-1)
+	}
+	log.Println("Code generated successfully 🙂")
+}

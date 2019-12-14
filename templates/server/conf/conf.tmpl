@@ -1,0 +1,43 @@
+package config
+
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+	"{{ .BaseImportPath }}/logger"
+)
+
+const (
+	logTag = "{{ .ServiceName }}.server.config"
+
+	configFileNameWithoutExt = "app_conf"
+	configFilePath           = "../../"
+)
+
+type AppConfig struct {
+	Env     string        `json:"env"`
+	Name    string        `json:"name"`
+	DB      DBConfig      `json:"db"`
+}
+
+
+var (
+	Configuration AppConfig
+)
+
+func Read() {
+	Configuration = AppConfig{}
+	logger.Info(logTag, "[Load] starting to read config")
+
+	viper.SetConfigName(configFileNameWithoutExt)
+	viper.AddConfigPath(configFilePath)
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		// Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+
+	viper.Unmarshal(&Configuration)
+	return
+}

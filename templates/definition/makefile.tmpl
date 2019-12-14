@@ -1,0 +1,35 @@
+CC := protoc
+
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+
+
+BASEDIR := .
+PROTODIR := $(BASEDIR)/$(current_dir)
+DESTDIR := $(BASEDIR)/
+
+all:
+
+	@echo "Generating gRPC stub ..."
+	@$(CC) -I/usr/local/include -I. \
+		-I${GOPATH}/src \
+		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--go_out=plugins=grpc:$(DESTDIR) \
+		$(PROTODIR)/service.proto
+
+	@echo "Generating gateway stub ..."
+	@$(CC) -I/usr/local/include -I. \
+		-I${GOPATH}/src \
+		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--grpc-gateway_out=logtostderr=true:$(DESTDIR) \
+		$(PROTODIR)/service.proto
+
+	@echo "Generating Swagger spec ..."
+	@$(CC) -I/usr/local/include -I. \
+		-I${GOPATH}/src \
+		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		--swagger_out=logtostderr=true:$(DESTDIR) \
+		$(PROTODIR)/service.proto
+
+	@echo "Running go generate ..."
+	@# go generate $(PROTODIR)

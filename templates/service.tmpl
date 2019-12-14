@@ -1,0 +1,8 @@
+package main
+
+// responsible for compiling proto and generating stub
+//go:generate make -f definition/Makefile
+
+// responsible for reading stub and creating place holders for implementation
+//go:generate go run impl.go
+// todo: change ^ run from cmdline

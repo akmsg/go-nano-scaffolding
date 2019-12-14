@@ -1,0 +1,19 @@
+syntax = "proto3";
+package definition;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+message EchoMessage {
+    string value = 1;
+}
+
+service {{ .ServiceName }} {
+    rpc Echo(EchoMessage) returns (EchoMessage) {
+        option (google.api.http) = {
+        post: "/v1/echo"
+        body: "*"
+        };
+    }
+
+}
