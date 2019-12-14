@@ -25,7 +25,7 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v cmd/main.go -o bin/nanokit.bin
+      run: go build -v -o bin/nanokit.bin cmd/main.go 
       
     - name: Execute binary
       run: bin/nanokit.bin -h
