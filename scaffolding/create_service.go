@@ -4,21 +4,24 @@ import (
 	"fmt"
 	"go/build"
 	"path/filepath"
+	"strings"
 )
 
 func generateBoilerPlate(serviceName, outputDir string) error {
 	servicePath := filepath.Join(outputDir, serviceName)
 	goSrc := filepath.Join(build.Default.GOPATH, "src")
 	baseImportPath, errBaseImportPath := filepath.Rel(goSrc, servicePath)
+	exportableServiceName := strings.ToUpper(serviceName[0:1]) + serviceName[1:]
 
 	if nil != errBaseImportPath {
 		return fmt.Errorf("failed to create baseImportPath: %v", errBaseImportPath)
 	}
 
 	td := map[string]string{
-		"ServiceName":    serviceName,
-		"ServicePath":    servicePath,
-		"BaseImportPath": baseImportPath,
+		"ServiceName":           serviceName,
+		"ExportableServiceName": exportableServiceName,
+		"ServicePath":           servicePath,
+		"BaseImportPath":        baseImportPath,
 	}
 
 	// 1. cmd/

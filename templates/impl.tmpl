@@ -22,7 +22,7 @@ func main() {
 	defer f.Close()
 	errGen := goimpl.Generate(
 		&goimpl.GenOpts{
-			Inter:    reflect.TypeOf((*definition.{{ .ServiceName }}Server)(nil)).Elem(),
+			Inter:    reflect.TypeOf((*definition.{{ .ExportableServiceName }}Server)(nil)).Elem(),
 			PkgName:  "handler",
 			ImplName: "*hoggerServer",
 
