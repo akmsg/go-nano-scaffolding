@@ -1,7 +1,17 @@
 package main
 
-import "github.com/akmsg/go-nano-scaffolding/options"
+import (
+	"fmt"
+	"os"
+	"runtime"
 
-func main(){
+	"github.com/akmsg/go-nano-scaffolding/options"
+)
+
+func main() {
+	if runtime.GOOS == "windows" {
+		fmt.Println("Can't Execute this on a windows machine")
+		os.Exit(127)
+	}
 	options.Run()
 }

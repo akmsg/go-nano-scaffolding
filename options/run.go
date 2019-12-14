@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
+	"path/filepath"
 
 	"github.com/akmsg/go-nano-scaffolding/scaffolding"
 )
@@ -25,7 +27,8 @@ func Run() {
 		}
 		out = &outputDir
 	}
-	fmt.Printf("Will scaffold service: %s at: %s\n", *name, *out)
+	servicePath := filepath.Join(*out, *name)
+	fmt.Printf("Will scaffold service: %s at: %s\n", *name, servicePath)
 
 	errorCrateService := scaffolding.CreateService(*name, *out)
 	if nil != errorCrateService {
@@ -33,5 +36,22 @@ func Run() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Scaffolding completed!\n")
+	fmt.Printf("Scaffolding done ...\n")
+	errChdir := os.Chdir(servicePath)
+	if nil != errChdir {
+		fmt.Printf("Failed to create service: %v", errChdir)
+		os.Exit(2)
+	}
+
+	c := exec.Command("go", "generate")
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	errGoGen := c.Run()
+
+	if nil != errGoGen {
+		fmt.Printf("Failed to create service: %v", errGoGen)
+		os.Exit(3)
+	}
+
+	fmt.Printf("Service created!\n")
 }
